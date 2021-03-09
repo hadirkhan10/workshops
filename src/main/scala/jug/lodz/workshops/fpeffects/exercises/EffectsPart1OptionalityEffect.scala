@@ -94,24 +94,39 @@ object EffectsPart1OptionalityEffect {
     import FrontEnd._
 
     //PART1 - OPTION
-    //    val optionalUser = UsersDAO.findOption(1)
-    //      displayPage(userToHTML(optionalUser.get))
-    //      displayError("There is no user with this id")
+    val optionalUser = UsersDAO.findOption(1)
+    if (optionalUser.isDefined) {
+      displayPage(userToHTML(optionalUser.get))
+    } else {
+      displayError("There is no user with this id")
+    }
+
 
     ///PART 2 - NULL
-    //    val userOrNull=UsersDAO.findOrNull(1)
-    //      displayPage(userToHTML(userOrNull))
-    //      displayError("There is no user with this id")
+    val userOrNull = UsersDAO.findOrNull(1)
+    if (userOrNull != null) {
+      displayPage(userToHTML(userOrNull))
+    } else {
+      displayError("There is no user with this id")
+    }
 
     //PART3 - EXCEPTION
-    //      val user=UsersDAO.findOrException(1)
-    //      displayPage(userToHTML(user))
-    //      displayError("There is no user with this id")
+    try {
+      val user=UsersDAO.findOrException(1)
+      displayPage(userToHTML(user))
+    } catch {
+      case e: RuntimeException => displayError("There is no user with this id")
+    }
+
 
     //PART4 - DEFAULT
-    //    val user=UsersDAO.findOrDefault(1,MeetupDomain.User(-1,"Not Existing","noexisting@domain.com"))
-    //      displayPage(userToHTML(user))
-    //      displayError("There is no user with this id")
+    val user=UsersDAO.findOrDefault(1,MeetupDomain.User(-1,"Not Existing","noexisting@domain.com"))
+    if (user.id == -1) {
+      displayError("There is no user with this id")
+    } else {
+      displayPage(userToHTML(user))
+    }
+
 
 
   }
