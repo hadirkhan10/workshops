@@ -11,7 +11,7 @@ object EffectsPart3MultipleOptions {
       println("\n {DIVIDE BY HEAD OPTION}")
       val divideTenBy: Int => Option[Int] = b => if (b != 0) Some(10 / b) else None
 
-      val list: List[Int] = List()
+      val list: List[Int] = List(2,3,4)
       val firstOptionalElement: Option[Int] = list.headOption
 
       val divisionResult: Option[Option[Int]] = firstOptionalElement.map(divideTenBy)
@@ -71,7 +71,11 @@ object EffectsPart3MultipleOptions {
 
       def userToHTML(u: User): HTML = s"""<a href="mailto:${u.email}">${u.name}</a>"""
       //EXERCISE
-      def meetupHistoryToHTML(mh: MeetupHistory) = ??? //"<h1>title</h1><img>image</img>"
+      def meetupHistoryToHTML(mh: MeetupHistory): HTML = {
+        val title = mh.title
+        val picture = mh.picture.map(p => p)
+        s"<h1>$title</h1><img>$picture<img>"
+      } //"<h1>title</h1><img>image</img>"
     }
 
     object FrontEnd {
@@ -87,7 +91,11 @@ object EffectsPart3MultipleOptions {
       import MeetupDomain._
 
       //EXERCISE
-      def userLastMeetup(id: Int): HTML = ???
+      def userLastMeetup(id: Int): HTML = UsersDAO.find(id)
+                                          .flatMap(user => user.history.headOption)
+                                          .map(mthistory => meetupHistoryToHTML(mthistory))
+                                          .map(displayPage)
+                                          .getOrElse(displayPage("NEW USER : 0 MEETUPS"))
       //UsersDAO.find(id) & history.headOption & meetupHistoryToHtml & displayPage || displayPageEmptyUser
 
     }
@@ -98,13 +106,13 @@ object EffectsPart3MultipleOptions {
     Demonstration.demonstrate()
 
     //EXERCISE
-    //    println("\n\n ----------EXERCISE----------------")
-    //    val pageUser1 = Exercise.Controller.userLastMeetup(1)
-    //    println(pageUser1)  // <html><body><h1>FP Scala</h1><img>Picture(SCALA_LOGO)<img></body></html>
-    //    val pageUser2 = Exercise.Controller.userLastMeetup(2)
-    //    println(pageUser2)  //<html><body>NEW USER : 0 MEETUPS</body></html>
-    //    val pageUser3 = Exercise.Controller.userLastMeetup(3)
-    //    println(pageUser3) //???
+        println("\n\n ----------EXERCISE----------------")
+        val pageUser1 = Exercise.Controller.userLastMeetup(1)
+        println(pageUser1)  // <html><body><h1>FP Scala</h1><img>Picture(SCALA_LOGO)<img></body></html>
+        val pageUser2 = Exercise.Controller.userLastMeetup(2)
+        println(pageUser2)  //<html><body>NEW USER : 0 MEETUPS</body></html>
+        val pageUser3 = Exercise.Controller.userLastMeetup(3)
+        println(pageUser3) //???
 
 
     //    println("\n\n ----------ADDITIONAL----------------")
