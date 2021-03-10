@@ -82,12 +82,12 @@ object EffectsPart2UnderstandOption {
     import Exercise._
     import Conversions._
     import FrontEnd._
-    val html1 = UsersDAO.find(1).map(userToHTML).fold(displayError("user with id 1 not found"))(displayPage)
-    val html2 = UsersDAO.find(2).map(user => userToHTML(user)).fold(displayError("user with id 2 not found"))(displayPage)
+    val html1 = UsersDAO.find(1).map(userToHTML).fold(displayError("user with id 1 not found"))(displayPage)  // use map & fold
+    val html2 = UsersDAO.find(2).map(userToHTML).fold(displayError("user with id 2 not found"))(displayPage)  // use map & fold
 
     println("[ID=2] - below one line with domain transformation")
-    UsersDAO.find(2) //use map & orElse & foreach to display result
-    val html3 = UsersDAO.find(2) //use map & getOrElse
+    UsersDAO.find(2).map(user => displayPage(userToHTML(user))).orElse(Some(displayError("user with id 2 not found"))).foreach(println) //use map & orElse & foreach to display result
+    val html3 = UsersDAO.find(2).map(user => displayPage(userToHTML(user))).getOrElse(displayError("user with id 2 not found")) //use map & getOrElse
 
 
     println(s"[ID=1] : $html1")
